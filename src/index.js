@@ -1,28 +1,14 @@
 const Koa = require("koa");
+const Router = require("koa-router");
 
 const app = new Koa();
+const router = new Router();
 
-app.use(async (ctx, next) => {
-  console.log(ctx.url);
-  console.log(1);
-  if (ctx.query.authorized !== "1") {
-    return;
-  }
-  //   next().then(() => {
-  //     console.log("END");
-  //   });
-  await next();
-  console.log("END!!!");
-});
+const api = require("./api");
 
-app.use((ctx, next) => {
-  console.log(2);
-  next();
-});
+router.use("/api", api.routes());
 
-app.use(ctx => {
-  ctx.body = "hello world running water";
-});
+app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(4000, () => {
   console.log("Listening to port 4000");
